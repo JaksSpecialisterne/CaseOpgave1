@@ -1,14 +1,15 @@
 class User:
-    def __init__(self, userId, name, address, borrowedBooks = [], inbox = [], log = []):
+    def __init__(self, userId, name, address, borrowedBooks = [], reservations = [], inbox = [], log = []):
         self.userId = userId
         self.name = name
         self.address = address
         self.borrowedBooks = borrowedBooks
+        self.reservations = reservations
         self.inbox = inbox
         self.log = log
 
     #Adds the given log to the books logs
-    def AddLog(self, log):
+    def LogEvent(self, log):
         self.log.append(log)
 
     #Adds mail to the user
@@ -33,5 +34,8 @@ class User:
 
     def HasBook(self, bookId):
         return bookId in self.borrowedBooks
+    
+    def NoReservation(self):
+        return not self.reservations
 
     
