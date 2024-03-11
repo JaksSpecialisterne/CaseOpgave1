@@ -1,41 +1,89 @@
-print('hello world')
 import pandas as pd
+import ReadFile
 
 
-booksDF = pd.read_excel('Modern_Library_Top_100_Best_Novels.xlsx')
 
-print(booksDF.head())
-booksDF = booksDF[['TITLE','AUTH','YEAR']]
-booksDF['Available'] = True
-booksDF['Reservations'] = [[] for _ in range(len(booksDF))]
-booksDF['Log'] = [[] for _ in range(len(booksDF))]
-print(booksDF.head)
-print()
-#print(booksDF[booksDF['AUTH']=='Joseph Conrad'].iloc[2].name)
-test =booksDF[booksDF['AUTH']=='Joseph Conrad'].iloc[2].name
-#booksDF
-#print(booksDF.iloc[test])
 
 class Library:
-    def __init__(self, file):
-        LibraryDF = pd.read_excel(file)
-        LibraryDF = booksDF[['TITLE','AUTH','YEAR']]
-        LibraryDF['Available'] = True
-        LibraryDF['Reservations'] = [[] for _ in range(len(LibraryDF))]
-        LibraryDF['Log'] = [[] for _ in range(len(LibraryDF))]
+    #################    
+    ### SINGLETON ###
+    #################
+    # initialisation checks for instance and only initialises the actual object if there are no other instances
+    __instance  = None
+    def  __init__(self):
+        if Library.__instance is None:
+            Library.__instance = Library.__impl()  
+        #self.__dict__['_DataFrame_instance'] = DataFrame.__instance
         
-        pass
+    #redirects any function calls to the inner class __impl
+    def __getattr__(self, attr):
+        return getattr(self.__instance, attr)
+    def __setattr__(self, attr, value):
+        return setattr(self.__instance, attr, value)
     
-    
+    #Actual code goes in this inner class
+    class __impl:
+        def __init__(self):
+            pass
+        LibDF = ReadFile.ReadFile().data
+        
+        def searchTitle(self,_input):
+            sNresults = []
+            for i in range(len(self.LibDF)):
+                #print(self.LibDF.iloc[i])
+                if self.LibDF.iloc[i].TITLE == _input:
+                    sNresults.append(self.LibDF.iloc[i])
+            return(sNresults)
+            pass
+        
+        def searchAuthor(self,_input):
+            sAresults = []
+            for i in range(len(self.LibDF)):
+                #print(self.LibDF.iloc[i])
+                if self.LibDF.iloc[i].AUTH == _input:
+                    sAresults.append(self.LibDF.iloc[i])
+            return(sAresults)
+            pass
+        
+        def searchYear(self,_input):
+            sYresults = []
+            for i in range(len(self.LibDF)):
+                #print(self.LibDF.iloc[i])
+                if self.LibDF.iloc[i].YEAR == _input:
+                    sYresults.append(self.LibDF.iloc[i])
+            return(sYresults)
+            pass
+        
+        def search(self,method, _input):
+            if method == 'Title':
+                return self.searchTitle(_input)
+            elif method == 'Author':
+                return self.searchAuthor(_input)
+            elif method == 'Year':
+                return self.searchYear(_input)
+            else:
+                print('ERROR! Unknown method passed to search function: '+str(method))
+            
+            
+            pass
+        
+        def changeAvailability(self,index):
+            #print(self.LibDF['AVAILABLE'][index])
+            self.LibDF.loc[index,('AVAILABLE')] = not self.LibDF.loc[index,('AVAILABLE')]
+
+
+        # Test function to check ID
+        def spam(self):
+            return id(self)
     pass
 
+check = Library()
+#print(check.LibDF.head())
 
-usersDF = pd.DataFrame( columns=['Name', 'Adress','Borrowed_Books','Log','Inbox'])
-def newuser(df,name,adress):
-    usersDF.loc[len(df)] = [name,adress,[],[],[]]
+print(check.search('Year',1925))
+check.changeAvailability(4)
     
-    
-    
-    
-print(len(booksDF))
-print(usersDF)
+
+print(check.LibDF.head())
+#print(len(booksDF))
+#print(usersDF)
