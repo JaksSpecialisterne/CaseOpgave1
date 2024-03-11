@@ -1,6 +1,6 @@
 class User:
-    def __init__(self, id, name, address, borrowedBooks = [], inbox = [], log = []):
-        self.id = id
+    def __init__(self, userId, name, address, borrowedBooks = [], inbox = [], log = []):
+        self.userId = userId
         self.name = name
         self.address = address
         self.borrowedBooks = borrowedBooks
@@ -23,12 +23,15 @@ class User:
     def RemoveAllMail(self):
         self.inbox = []
 
-    #Borrow book by book id
-    def BorrowBook(self, id):
-        self.borrowedBooks.append(id)
+    #Borrow book by bookId
+    def BorrowBook(self, bookId):
+        self.borrowedBooks.append(bookId)
 
-    #Return book by book id
-    def ReturnBook(self, id):
-        self.borrowedBooks.remove(id)
+    #Return book by bookId
+    def ReturnBook(self, bookId):
+        self.borrowedBooks.remove(bookId)
+
+    def HasBook(self, bookId):
+        return bookId in self.borrowedBooks
 
     

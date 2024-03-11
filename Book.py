@@ -1,32 +1,23 @@
 class Book:
-    def __init__(self, id, title, author, year, available = True, reservations = [], log = []):
-        self.id = id
-        self.title = title
-        self.author = author
-        self.year = year
-        self.available = available
-        self.reservations = reservations
-        self.log = log
-    
     #Switches availability of book
-    def ChangeAvailableStatus(self):
-        self.available = not self.available
+    def ChangeAvailableStatus(df):
+        df["AVAILABLE"] = not df["AVAILABLE"]
 
     #Adds the given log to the books logs
-    def AddLog(self, log):
-        self.log.append(log)
+    def AddLog(df, log):
+        df["LOG"].append(log)
 
     #Adds the specified user id to the reservations
-    def AddReservation(self, id):
-        self.reservations.append(id)
+    def AddReservation(df, userId):
+        df["RESERVATIONS"].append(userId)
 
     #Removes either the first reservation on the book or the reservation for the given user id
-    def RemoveReservation(self, id = -1):
+    def RemoveReservation(df, userId = -1):
         if id == -1:
-            self.reservations.pop(0)
+            df["RESERVATIONS"].pop(0)
         else:
-            self.reservations.remove(id)
+            df["RESERVATIONS"].remove(userId)
 
     #Checks whether the book is reserved
-    def NotReserved(self):
-        return not self.reservations
+    def NotReserved(df):
+        return not df["RESERVATIONS"]
