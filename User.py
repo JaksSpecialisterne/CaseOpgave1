@@ -24,6 +24,7 @@ class User:
     def RemoveAllMail(self):
         self.inbox = []
 
+
     #Borrow book by bookId
     def BorrowBook(self, bookId):
         self.borrowedBooks.append(bookId)
@@ -32,10 +33,23 @@ class User:
     def ReturnBook(self, bookId):
         self.borrowedBooks.remove(bookId)
 
+
+    #Reserve book by bookId
+    def ReserveBook(self, bookId):
+        self.reservations.append(bookId)
+
+    #Unreserve book by bookId
+    def UnreserveBook(self, bookId):
+        self.reservations.remove(bookId)
+
+
     def HasBook(self, bookId):
         return bookId in self.borrowedBooks
     
     def NoReservation(self):
         return not self.reservations
+    
+    def NoBorrowedBooks(self):
+        return not self.borrowedBooks
 
     

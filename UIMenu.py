@@ -1,103 +1,189 @@
 from UserManagement import UserManagement
+from Library import Library
 import os
 
 userManagement = None
-
+library = None
 
 #Shows menu for the user
 def ShowMenu():
-    print("\nSelect one:\n")
-    print("1: Log out")
-    print("2: Search for book")
-    print("3: See reservations")
-    print("4: See borrowed books")
-    #print("5: See borrowed book history")
-    numOptions = 5
-    input = NumberInput(numOptions)
-    match input:
-        case 1:
-            LogOut()
-        case 2:
-            ShowSearchMenu()
-        case 3:
-            ShowReservations()
-        case 4:
-            ShowBorrowedBooks()
-        #case 5:
-            #pass
+    while True:
+        print("\nSelect one:\n")
+        print("1: Log out")
+        print("2: Search for book")
+        print("3: See reservations")
+        print("4: See borrowed books")
+        print("5: See log")
+        numOptions = 5
+        input = NumberInput(1, numOptions)
+        match input:
+            case 1:
+                LogOut()
+                break
+            case 2:
+                ShowSearchMenu()
+            case 3:
+                ShowReservations()
+            case 4:
+                ShowBorrowedBooks()
+            case 5:
+                ShowLogs()
+
+
+
 
 def ShowBorrowedBooks():
-    #Check if any reservations
-    if userManagement.BorrowedBooksByUser():
-        print("No borrowed books...")
+    if userManagement.NoBorrowedByUser():
+        print("\nNo borrowed books...")
     else:
-        print("Current borrowed books: ")
-        for i in userManagement.BorrowedBooksByUser:
-            print("Book: " + "book stuff here")
+        print("\nCurrent borrowed books: ")
+        for book in userManagement.BorrowedBooksByUser():
+            bookObject = library.getBook(book)
+            print(f"{bookObject.TITLE} by {bookObject.AUTH}")
     KeyToContinue()
-    ShowMenu()
 
 def ShowReservations():
-    #Check if any reservations
-    if userManagement.UserHasReservations():
-        print("No reservations...")
+    if userManagement.NoReservationsByUser():
+        print("\nNo reservations...")
     else:
-        print("Current resevations: ")
-        for i in userManagement.BookReservedByUser:
-            print("Book: " + "book stuff here")
+        print("\nCurrent resevations: ")
+        for book in userManagement.ReservedBooksByUser():
+            bookObject = library.getBook(book)
+            print(f"{bookObject.TITLE} by {bookObject.AUTH}")
     KeyToContinue()
-    ShowMenu()
 
 def ShowSearchMenu():
-    print("How would you like to search for your book?")
-    print("1: By author\n2: by year\n3: by title")
-    input = NumberInput(3)
-    SearchMenu(input)
+    print("\nHow would you like to search for your book?")
+    print("1: By author\n2: by year\n3: by title\n4: return to menu")
+    input = NumberInput(1, 4)
+    if input < 4:
+        SearchMenu(input)
+
+def ShowLogs():
+    print("\nLogs:")
+    for log in userManagement.currentUser.log:
+        print(f"{log}")
+    KeyToContinue()
 
 
 
-#Show menu for search along, depending on choice it calls one of the functions below
 def SearchMenu(searchType):
-    searchTerm = input("Please enter searchterm: ")
+    method = ""
     match searchType:
         case 1:
-            books = []
-            pass#Library.SearchAuthor(searchTerm)
+            method = "Author"
         case 2:
-            books = []
-            pass#Library.SearchYear(searchTerm)
+            method = "Year"
         case 3:
-            books = []
-            pass#Library.SearchTitle(searchTerm)
-    SelectBook(books)
+            method = "Title"
 
+    difParam = False
+    while True:
+        searchTerm = input("\nPlease enter searchterm: ")
+        if searchTerm == "retry0":
+            difParam = True
+            break
+        userManagement.LogEvent(f"Searched for term: '{searchTerm}'")
+        books = library.search(method, searchTerm)
+        if len(books) >= 1:
+            break
+        print("\nNo matches found, try again, type retry0 if you wish to search by a different parameter")
+
+    if difParam:
+        ShowSearchMenu()
+        return
+    
+    SelectBook(books)
+    KeyToContinue()
 
 def SelectBook(books):
-    i = 0
-    for book in books:
-        print(i + ": " + book.TITLE + ", " + book.AUTHOR + ", " + book.YEAR)
-        i += 1
-    input = NumberInput(i)
-    ReserveOrBorrow(books[i])
-
-def ReserveOrBorrow(book):
     i = 1
-    if book.AVAILABLE:
-        print(i + ": borrow book")
+    for book in books:
+        print(f"{i}: {book.TITLE}, {book.AUTH}, {book.YEAR}")
         i += 1
-        #stuff to borrow
-    if  userManagement.BookAlreadyReservedByUser(book.name):
-        print(i + ": reserve book")
-        #stuff to reserve
+    print("\nWhat book you wish to view more info on, reserve, unreserve, book or return\nEnter 0 to return to menu")
+    input = NumberInput(0, i)-1
+    if input == -1:
+        return
+    BookAction(books[input], books)
+
+def BookAction(book, books):
+    canReserve = not userManagement.BookAlreadyReservedByUser(book.name)
+    canBorrow = CanBorrowBook(book)
+    canReturn = userManagement.UserHasBook(book)
+    funcToDo = []
+
+    print(f"\nWhat would you like to do with {book.TITLE}")
+
+    if  canReserve:
+        print("1: reserve book")
+        funcToDo.append(ReserveBook)
+    else:
+        print("1: unreserve book")
+        funcToDo.append(UnreserveBook)
+
+    if canBorrow:
+        print("2: borrow book")
+        funcToDo.append(BorrowBook)
+    elif canReturn:
+        print("2: return book")
+        funcToDo.append(ReturnBook)
+
+    print("3: return to list of books")
+
+    input = NumberInput(1, 3)-1
+    if input == 2:
+        SelectBook(books)
+    else:
+        funcToDo[input](book)
+    
 
 
 
-def NumberInput(maxNum):
+def CanBorrowBook(book):
+    if len(book.RESERVATIONS) > 0:
+        if book.RESERVATIONS[0] == userManagement.currentUser.userId:
+            return book.AVAILABLE
+        else:
+            return False
+    else:
+        return book.AVAILABLE
+
+def BorrowBook(book):
+    bookId = book.name
+    userManagement.UserBorrowBook(bookId)
+    library.changeAvailability(bookId)
+    print(f"You have borrowed {book.TITLE}")
+
+def ReturnBook(book):
+    bookId = book.name
+    userManagement.UserReturnBook(bookId)
+    library.changeAvailability(bookId)
+    print(f"You have returned {book.TITLE}")
+
+def ReserveBook(book):
+    bookId = book.name
+    userManagement.UserReserveBook(bookId)
+    library.newReserve(bookId, userManagement.currentUser.userId)
+    print(f"You have reserved {book.TITLE}")
+
+def UnreserveBook(book):
+    bookId = book.name
+    userManagement.UserUnreserveBook(bookId)
+    library.removeReservation(bookId, userManagement.currentUser.userId)
+    print(f"You have unreserved {book.TITLE}")
+
+
+
+def LogEvent(event):
+    userManagement.LogEvent(event)
+
+def NumberInput(minNum, maxNum):
     while True:
-        num = input("Please enter a number ")
+        num = input("\nPlease enter a number ")
         try:
             val = int(num)
-            if val <= maxNum and val > 0:
+            if val <= maxNum and val >= minNum:
                 return val
             else:
                 print("Not a valid number...")
@@ -105,32 +191,40 @@ def NumberInput(maxNum):
             print("Not a number...")
 
 def KeyToContinue():
-    print("press a key to continue...")
+    print("\nPress a key to continue...")
     input()
     os.system('cls')
 
+
+
+
 def LogInMenu():
     os.system('cls')
-    userAmount = 100#sæt den til at være størrelsen af usert database - 1
+    userAmount = 10 #sæt den til at være størrelsen af usert database - 1
     while True:
         num = input("Please enter your userId ")
         try:
             val = int(num)
-            maxUser = 10
-            if val <= maxUser and val >= 0:
+            if val <= userAmount and val >= 0:
                 #Sæt curren user i management her
                 userManagement.LogInUser(val)
-                ShowMenu()
+                break
             else:
                 print("Not a valid userId...")
         except ValueError:
             print("Not a userId, must be a integer...")
+    ShowMenu()
 
 def LogOut():
-    #Sæt current user i user managedment til None
+    userManagement.LogOutUser()
     LogInMenu()
 
-if __name__ == '__main__':
-    #Initialise library and user management here
+def Initialize():
+    global userManagement
     userManagement = UserManagement()
+    global library
+    library = Library()
+
+if __name__ == '__main__':
+    Initialize()
     LogInMenu()
