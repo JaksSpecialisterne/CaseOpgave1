@@ -153,7 +153,7 @@ class Library:
 check = Library()
 #print(check.LibDF.head())
 #check.WriteToExcel('trysavingfilesforfun.xlsx')
-print(check.search('1899'))
+print(check.search('animal'))
 
 check.newReserve(0,156)
 #check.newReserve(0,12)

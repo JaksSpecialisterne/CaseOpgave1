@@ -274,6 +274,7 @@ def StartMenu():
             case 2:
                 SystemLogIn()
             case 3:
+                userManagement.WriteToExcel(userManagement.filename)
                 quit()
 
 def Initialize():

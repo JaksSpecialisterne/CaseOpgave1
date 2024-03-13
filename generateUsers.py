@@ -20,8 +20,10 @@ class generateUsers:
         users['NAME'] = names
         users['ADDRESS'] = adresses
         users['BORROWEDBOOKS'] = [[] for _ in range(len(users))]
+        users['RESERVATIONS'] = [[] for _ in range(len(users))]
         users['LOG'] = [[] for _ in range(len(users))]
         users['INBOX'] = [[] for _ in range(len(users))]
+        
         #print(users)
         users.to_excel('user_data.xlsx',index=False)
         

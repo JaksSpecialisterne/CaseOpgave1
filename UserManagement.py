@@ -19,7 +19,9 @@ class UserManagement:
     #Actual code goes in this inner class
     class __impl:
         def __init__(self):
-            self.users = pd.read_excel('user_data.xlsx')
+            
+            self.filename = 'user_data.xlsx'
+            self.users = pd.read_excel(self.filename)
             self.currentUser = None
 
         #Adds user to the database of users
@@ -93,7 +95,7 @@ class UserManagement:
         def LogInUser(self, userId):
             tempUser = self.users.iloc[userId]
             #self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, tempUser.BORROWEDBOOKS, tempUser.LOG, tempUser.INBOX)
-            self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, ast.literal_eval(tempUser.BORROWEDBOOKS), ast.literal_eval(tempUser.LOG) ,ast.literal_eval(tempUser.INBOX))
+            self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, ast.literal_eval(tempUser.BORROWEDBOOKS),ast.literal_eval(tempUser.RESERVATIONS), ast.literal_eval(tempUser.LOG) ,ast.literal_eval(tempUser.INBOX))
             self.LogEvent("Log in at " + self.GetTimeStamp())
 
         def LogOutUser(self):
@@ -104,3 +106,8 @@ class UserManagement:
         #Check if id exists return.
         def UserIdExists(self, userId):
             return userId < len(self.users)
+        
+        def WriteToExcel(self, _filename):
+            self.users.to_excel(_filename,index=False)
+        
+        
