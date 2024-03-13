@@ -1,6 +1,7 @@
 from faker import Faker
 import pandas as pd
 fake = Faker()
+import ast
 
 
 
@@ -29,8 +30,9 @@ class generateUsers:
 DFuser = generateUsers().userDF
 print(DFuser.head())
         
-        
-        
+print(type(ast.literal_eval(DFuser['INBOX'][0])))
+print(ast.literal_eval(DFuser['INBOX'][0]))
+print(ast.literal_eval(DFuser['INBOX']))
         
         
         

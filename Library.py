@@ -35,7 +35,7 @@ class Library:
                 if _input in self.LibDF.iloc[i].TITLE: # == _input:
                     sNresults.append(self.LibDF.iloc[i])
             return(sNresults)
-            pass
+
         
         def searchAuthor(self,_input):
             sAresults = []
@@ -44,7 +44,7 @@ class Library:
                 if _input in self.LibDF.iloc[i].AUTH: #== _input:
                     sAresults.append(self.LibDF.iloc[i])
             return(sAresults)
-            pass
+
         
         def searchYear(self,_input):
             sYresults = []
@@ -55,7 +55,7 @@ class Library:
                 if str(_input) in str(self.LibDF.iloc[i].YEAR): # == _input:
                     sYresults.append(self.LibDF.iloc[i])
             return(sYresults)
-            pass
+
         
         def search(self,method, _input):
             if method == 'Title':
@@ -70,7 +70,8 @@ class Library:
             
             pass
         
-        
+        def getBook(self, index):
+            return self.LibDF.iloc[index]
         
         def getIndex(self,method, _input):
             gI_search = self.search(method, _input)
@@ -88,8 +89,7 @@ class Library:
         def newLog(self, index, _log):
             self.LibDF.loc[index,('LOG')].append(_log)
             
-            pass
-        
+
         def newReserve(self, index, _reservation):
             self.LibDF.loc[index,('RESERVATIONS')].append(_reservation)
             
@@ -102,7 +102,7 @@ class Library:
             for j in rR_removals:
                 self.LibDF['RESERVATIONS'][bookID].pop(j)
                 rR_removals -=1
-            pass
+
         
         def isReservedBy(self,bookID,userID):
             if userID in self.LibDF['RESERVATIONS'][bookID]:
@@ -110,7 +110,11 @@ class Library:
             else:
                 return False
 
+        def WriteToExcel(self, _filename):
+            self.LibDF.to_excel(_filename,index=False)
 
+
+        
         # Test function to check ID
         def spam(self):
             return id(self)
@@ -118,7 +122,7 @@ class Library:
 
 check = Library()
 #print(check.LibDF.head())
-
+check.WriteToExcel('trysavingfilesforfun.xlsx')
 print(check.search('Year','197'))
 
 #check.newReserve(0,156)
@@ -132,3 +136,6 @@ print(check.getIndex('Year',1899))
 print(check.isReservedBy(0,156))
 #print(len(booksDF))
 #print(usersDF)
+print(type(check.getBook(0)))
+print(check.getBook(80))
+print(check.getBook(22))
