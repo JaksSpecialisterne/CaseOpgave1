@@ -1,5 +1,7 @@
 import pandas as pd
 from User import User
+from datetime import datetime
+import ast
 
 class UserManagement:
     __instance  = None
@@ -30,48 +32,74 @@ class UserManagement:
 
 
 
-        #Return list of book borrowed by the user
-        def BorrowedBooksByUser(self):
-            return not self.currentUser.borrowedBooks
-
         #Borrow book for user
         def UserBorrowBook(self, bookId):
             self.currentUser.BorrowBook(bookId)
+            self.LogEvent(f"Borrowed book with id: {bookId} at {self.GetTimeStamp()}")
 
         #Return book for user
         def UserReturnBook(self, bookId):
             self.currentUser.ReturnBook(bookId)
+            self.LogEvent(f"Returned book with id: {bookId} at {self.GetTimeStamp()}")
+
+        #Reserves Book
+        def UserReserveBook(self, bookId):
+            self.currentUser.ReserveBook(bookId)
+            self.LogEvent(f"Reserved book with id: {bookId} at {self.GetTimeStamp()}")
+
+        #Unreserve Book
+        def UserUnreserveBook(self, bookId):
+            self.currentUser.UnreserveBook(bookId)
+            self.LogEvent(f"Unreserved book with id: {bookId} at {self.GetTimeStamp()}")
+
+
 
         #Check if user has book
-        def UserHasBook(self, bookId):
-            return self.currentUser.HasBook(bookId)
+        def UserHasBook(self, book):
+            return self.currentUser.HasBook(book.name)
 
 
+        #Return list of books borrowed by the user
+        def BorrowedBooksByUser(self):
+            return self.currentUser.borrowedBooks
+        
+        #Return list of books reserved by the user
+        def ReservedBooksByUser(self):
+            return self.currentUser.reservations
+
+
+        #Check if user has any reservations
+        def NoReservationsByUser(self):
+            return self.currentUser.NoReservation()
+        
+         #Check if user has any reservations
+        def NoBorrowedByUser(self):
+            return self.currentUser.NoBorrowedBooks()
+        
+        #Checks if book is already reserved by user
+        def BookAlreadyReservedByUser(self, bookId):
+            return bookId in self.currentUser.reservations
+
+
+        def GetTimeStamp(self):
+            now = datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            return current_time
 
         #Log event for user, such as borrowing or returning
         def LogEvent(self, event):
             self.currentUser.LogEvent(event)
 
-
-
-        def UserHasReservations(self):
-            return not self.currentUser.NoReservation()
-
-        def BooksReservedByUser(self):
-            return self.currentUser.reservations
-        
-        def BookAlreadyReservedByUser(self, bookId):
-            return bookId in self.currentUser.reservations
-
-
-
         #Initialize user from database using userId
         def LogInUser(self, userId):
             tempUser = self.users.iloc[userId]
-            self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, tempUser.BORROWEDBOOKS, tempUser.LOG, tempUser.INBOX)
+            #self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, tempUser.BORROWEDBOOKS, tempUser.LOG, tempUser.INBOX)
+            self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, ast.literal_eval(tempUser.BORROWEDBOOKS), ast.literal_eval(tempUser.LOG) ,ast.literal_eval(tempUser.INBOX))
+            self.LogEvent("Log in at " + self.GetTimeStamp())
 
         def LogOutUser(self):
             #Gem brugere her og skriv den til dataen.
+            self.LogEvent("Log out at " + self.GetTimeStamp())
             self.currentUser = None
 
         #Check if id exists return.
