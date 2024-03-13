@@ -181,13 +181,13 @@ def CanBorrowBook(book):
 def BorrowBook(book):
     bookId = book.name
     userManagement.UserBorrowBook(bookId)
-    library.changeAvailability(bookId)
+    library.changeAvailability(bookId, userManagement.currentUser.userId)
     print(f"You have borrowed {book.TITLE}")
 
 def ReturnBook(book):
     bookId = book.name
     userManagement.UserReturnBook(bookId)
-    library.changeAvailability(bookId)
+    library.changeAvailability(bookId, userManagement.currentUser.userId)
     print(f"You have returned {book.TITLE}")
 
 def ReserveBook(book):
