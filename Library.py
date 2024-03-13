@@ -94,9 +94,13 @@ class Library:
         
         # Flips the boolean associated with this book in the AVAILABLE column used to keep track of whether the book
         # has been lend out or not.
-        def changeAvailability(self,index):
+        def changeAvailability(self,index, userID):
             #print(self.LibDF['AVAILABLE'][index])
             self.LibDF.loc[index,('AVAILABLE')] = not self.LibDF.loc[index,('AVAILABLE')]
+            if  self.LibDF.loc[index,('AVAILABLE')] == True:
+                self.newLog(index, 'Returned by user '+userID+'.')
+            else: 
+                self.newLog(index, 'Borrowed by user '+userID+'.')
             
         # Adds list element for book in the LOG column.
         def newLog(self, index, _log):
@@ -106,6 +110,7 @@ class Library:
         # the user has reserved the book.
         def newReserve(self, index, user):
             self.LibDF.loc[index,('RESERVATIONS')].append(user)
+            self.newLog(index, 'Resereved by user '+user+'.')
             
         # Remove a given user from list of reservations for given book.
         def removeReservation(self, bookID, userID):
@@ -117,6 +122,7 @@ class Library:
             for j in rR_removals:
                 self.LibDF['RESERVATIONS'][bookID].pop(j)
                 rR_removals -=1
+            self.newLog(bookID,  'User '+userID+' cancelled their reservation' )
 
         # Check if a given user is in the list of reservations for a given book.
         def isReservedBy(self,bookID,userID):
