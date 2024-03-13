@@ -58,7 +58,6 @@ class UserManagement:
         def UserHasBook(self, book):
             return self.currentUser.HasBook(book.name)
 
-
         #Return list of books borrowed by the user
         def BorrowedBooksByUser(self):
             return self.currentUser.borrowedBooks
@@ -67,18 +66,18 @@ class UserManagement:
         def ReservedBooksByUser(self):
             return self.currentUser.reservations
 
-
         #Check if user has any reservations
         def NoReservationsByUser(self):
             return self.currentUser.NoReservation()
         
-         #Check if user has any reservations
+        #Check if user has any reservations
         def NoBorrowedByUser(self):
             return self.currentUser.NoBorrowedBooks()
         
         #Checks if book is already reserved by user
         def BookAlreadyReservedByUser(self, bookId):
             return bookId in self.currentUser.reservations
+
 
 
         def GetTimeStamp(self):

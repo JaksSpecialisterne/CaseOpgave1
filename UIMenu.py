@@ -4,18 +4,19 @@ import os
 
 userManagement = None
 library = None
+superSecretPassword = "password"
 
-#Shows menu for the user
 def ShowMenu():
     while True:
+        print(f"\nWelcome {userManagement.currentUser.name}")
         print("\nSelect one:\n")
         print("1: Log out")
         print("2: Search for book")
         print("3: See reservations")
         print("4: See borrowed books")
         print("5: See log")
-        numOptions = 5
-        input = NumberInput(1, numOptions)
+        print("6: See mailbox")
+        input = NumberInput(1, 6)
         match input:
             case 1:
                 LogOut()
@@ -28,8 +29,23 @@ def ShowMenu():
                 ShowBorrowedBooks()
             case 5:
                 ShowLogs()
+            case 6:
+                ShowMailbox()
 
+def ShowMenuSystem():
+    while True:
+        print("\nSelect one:\n")
+        print("1: Log out")
+        print("2: Add new book to library")
+        input = NumberInput(1, 2)
+        match input:
+            case 1:
+                break
+            case 2:
+                AddBookToLibrary()
 
+def AddBookToLibrary():
+    pass
 
 
 def ShowBorrowedBooks():
@@ -54,9 +70,9 @@ def ShowReservations():
 
 def ShowSearchMenu():
     print("\nHow would you like to search for your book?")
-    print("1: By author\n2: by year\n3: by title\n4: return to menu")
-    input = NumberInput(1, 4)
-    if input < 4:
+    print("1: By author\n2: by year\n3: by title\n4: By author, year or title\n5:return to menu")
+    input = NumberInput(1, 5)
+    if input < 5:
         SearchMenu(input)
 
 def ShowLogs():
@@ -65,10 +81,17 @@ def ShowLogs():
         print(f"{log}")
     KeyToContinue()
 
+def ShowMailbox():
+    if not userManagement.currentUser.HasMail():
+        print("\nNo mail...")
+    else:
+        for log in userManagement.currentUser.inbox:
+            print(f"{log}")
+    KeyToContinue()
+
 
 
 def SearchMenu(searchType):
-    method = ""
     match searchType:
         case 1:
             method = "Author"
@@ -76,6 +99,8 @@ def SearchMenu(searchType):
             method = "Year"
         case 3:
             method = "Title"
+        case 4:
+            method = ""
 
     difParam = False
     while True:
@@ -83,8 +108,13 @@ def SearchMenu(searchType):
         if searchTerm == "retry0":
             difParam = True
             break
-        userManagement.LogEvent(f"Searched for term: '{searchTerm}'")
-        books = library.search(method, searchTerm)
+        LogEvent(f"Searched for term: '{searchTerm}'")
+        
+        if method == "":
+            books = library.search(searchTerm)
+        else:
+            books = library.search(searchTerm, method)
+
         if len(books) >= 1:
             break
         print("\nNo matches found, try again, type retry0 if you wish to search by a different parameter")
@@ -139,7 +169,6 @@ def BookAction(book, books):
     
 
 
-
 def CanBorrowBook(book):
     if len(book.RESERVATIONS) > 0:
         if book.RESERVATIONS[0] == userManagement.currentUser.userId:
@@ -175,6 +204,9 @@ def UnreserveBook(book):
 
 
 
+def NotifyReserver():
+    pass
+
 def LogEvent(event):
     userManagement.LogEvent(event)
 
@@ -195,8 +227,19 @@ def KeyToContinue():
     input()
     os.system('cls')
 
+def SystemLogIn():
+    SystemLogOn = False
+    while True:
+        passw = input("\nPlease enter the system password or return0 to return to login screen ")
+        global superSecretPassword
+        if passw == superSecretPassword:
+            SystemLogOn = True
+            break
+        elif passw == "return0":
+            break
 
-
+    if SystemLogOn:
+        ShowMenuSystem()
 
 def LogInMenu():
     os.system('cls')
@@ -217,7 +260,21 @@ def LogInMenu():
 
 def LogOut():
     userManagement.LogOutUser()
-    LogInMenu()
+    StartMenu()
+
+def StartMenu():
+    while True:
+        print("1: Log into user")
+        print("2: Log into system library")
+        print("3: Save and close")
+        input = NumberInput(1, 3)
+        match input:
+            case 1:
+                LogInMenu()
+            case 2:
+                SystemLogIn()
+            case 3:
+                quit()
 
 def Initialize():
     global userManagement
@@ -227,4 +284,4 @@ def Initialize():
 
 if __name__ == '__main__':
     Initialize()
-    LogInMenu()
+    StartMenu()
