@@ -1,5 +1,6 @@
 import pandas as pd
 import ReadFile
+import numpy as np
 
 
 
@@ -31,7 +32,7 @@ class Library:
             sNresults = []
             for i in range(len(self.LibDF)):
                 #print(self.LibDF.iloc[i])
-                if self.LibDF.iloc[i].TITLE == _input:
+                if _input in self.LibDF.iloc[i].TITLE: # == _input:
                     sNresults.append(self.LibDF.iloc[i])
             return(sNresults)
             pass
@@ -40,16 +41,18 @@ class Library:
             sAresults = []
             for i in range(len(self.LibDF)):
                 #print(self.LibDF.iloc[i])
-                if self.LibDF.iloc[i].AUTH == _input:
+                if _input in self.LibDF.iloc[i].AUTH: #== _input:
                     sAresults.append(self.LibDF.iloc[i])
             return(sAresults)
             pass
         
         def searchYear(self,_input):
             sYresults = []
+            
             for i in range(len(self.LibDF)):
+                #print(self.LibDF.iloc[i].YEAR)
                 #print(self.LibDF.iloc[i])
-                if self.LibDF.iloc[i].YEAR == _input:
+                if str(_input) in str(self.LibDF.iloc[i].YEAR): # == _input:
                     sYresults.append(self.LibDF.iloc[i])
             return(sYresults)
             pass
@@ -67,6 +70,16 @@ class Library:
             
             pass
         
+        
+        
+        def getIndex(self,method, _input):
+            gI_search = self.search(method, _input)
+            if len(gI_search) >= 1:
+                return gI_search[0].name
+            else:
+                print('ERROR! No search results for ' + str(_input)+' in getIndex function of library class object.')
+            pass
+        
         def changeAvailability(self,index):
             #print(self.LibDF['AVAILABLE'][index])
             self.LibDF.loc[index,('AVAILABLE')] = not self.LibDF.loc[index,('AVAILABLE')]
@@ -79,6 +92,24 @@ class Library:
         
         def newReserve(self, index, _reservation):
             self.LibDF.loc[index,('RESERVATIONS')].append(_reservation)
+            
+        def removeReservation(self, bookID, userID):
+            rR_removals = []
+            for i in range(len( self.LibDF['RESERVATIONS'][bookID])):
+                if self.LibDF['RESERVATIONS'][bookID][i] == userID:
+                    rR_removals.append(i)
+            rR_removals = np.array(rR_removals)
+            for j in rR_removals:
+                self.LibDF['RESERVATIONS'][bookID].pop(j)
+                rR_removals -=1
+            pass
+        
+        def isReservedBy(self,bookID,userID):
+            if userID in self.LibDF['RESERVATIONS'][bookID]:
+                return True
+            else:
+                return False
+
 
         # Test function to check ID
         def spam(self):
@@ -88,11 +119,16 @@ class Library:
 check = Library()
 #print(check.LibDF.head())
 
-#print(check.search('Year',1925))
+print(check.search('Year','197'))
 
-
-    
-
+#check.newReserve(0,156)
+#check.newReserve(0,12)
+#check.newReserve(0,9000)
+#check.removeReservation(0,156)
+#check.removeReservation(0,9000)
+#check.removeReservation(0,12)
 print(check.LibDF.head())
+print(check.getIndex('Year',1899))
+print(check.isReservedBy(0,156))
 #print(len(booksDF))
 #print(usersDF)
