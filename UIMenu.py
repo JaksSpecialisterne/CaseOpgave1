@@ -259,6 +259,7 @@ def LogInMenu():
     ShowMenu()
 
 def LogOut():
+    userManagement.WriteToExcel(userManagement.filename)
     userManagement.LogOutUser()
     StartMenu()
 
@@ -274,7 +275,6 @@ def StartMenu():
             case 2:
                 SystemLogIn()
             case 3:
-                userManagement.WriteToExcel(userManagement.filename)
                 quit()
 
 def Initialize():

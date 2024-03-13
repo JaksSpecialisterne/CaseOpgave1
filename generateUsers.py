@@ -34,7 +34,7 @@ print(DFuser.head())
         
 print(type(ast.literal_eval(DFuser['INBOX'][0])))
 print(ast.literal_eval(DFuser['INBOX'][0]))
-print(ast.literal_eval(DFuser['INBOX']))
+#print(ast.literal_eval(DFuser['INBOX']))
         
         
         

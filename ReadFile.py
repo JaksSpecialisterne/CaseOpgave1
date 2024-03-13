@@ -27,6 +27,8 @@ class ReadFile:
         data['AVAILABLE'] = True
         data['RESERVATIONS'] = [[] for _ in range(len(data))]
         data['LOG'] = [[] for _ in range(len(data))]
+        
+        data.to_excel('libraryBooks.xlsx',index=False)
             
         # Test function to check ID
         def spam(self):
