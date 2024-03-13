@@ -25,7 +25,7 @@ class ReadFile:
         data = pd.read_excel('Modern_Library_Top_100_Best_Novels.xlsx')
         data = data[['TITLE','AUTH','YEAR']]
         data['AVAILABLE'] = True
-        data['RERSERVATIONS'] = [[] for _ in range(len(data))]
+        data['RESERVATIONS'] = [[] for _ in range(len(data))]
         data['LOG'] = [[] for _ in range(len(data))]
             
         # Test function to check ID

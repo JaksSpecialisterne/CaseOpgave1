@@ -70,7 +70,15 @@ class Library:
         def changeAvailability(self,index):
             #print(self.LibDF['AVAILABLE'][index])
             self.LibDF.loc[index,('AVAILABLE')] = not self.LibDF.loc[index,('AVAILABLE')]
-
+            
+            
+        def newLog(self, index, _log):
+            self.LibDF.loc[index,('LOG')].append(_log)
+            
+            pass
+        
+        def newReserve(self, index, _reservation):
+            self.LibDF.loc[index,('RESERVATIONS')].append(_reservation)
 
         # Test function to check ID
         def spam(self):
@@ -80,8 +88,9 @@ class Library:
 check = Library()
 #print(check.LibDF.head())
 
-print(check.search('Year',1925))
-check.changeAvailability(4)
+#print(check.search('Year',1925))
+
+
     
 
 print(check.LibDF.head())
