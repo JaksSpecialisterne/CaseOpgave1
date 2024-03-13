@@ -98,9 +98,9 @@ class Library:
             #print(self.LibDF['AVAILABLE'][index])
             self.LibDF.loc[index,('AVAILABLE')] = not self.LibDF.loc[index,('AVAILABLE')]
             if  self.LibDF.loc[index,('AVAILABLE')] == True:
-                self.newLog(index, 'Returned by user '+userID+'.')
+                self.newLog(index, 'Returned by user '+str(userID)+'.')
             else: 
-                self.newLog(index, 'Borrowed by user '+userID+'.')
+                self.newLog(index, 'Borrowed by user '+str(userID)+'.')
             
         # Adds list element for book in the LOG column.
         def newLog(self, index, _log):
@@ -110,7 +110,7 @@ class Library:
         # the user has reserved the book.
         def newReserve(self, index, user):
             self.LibDF.loc[index,('RESERVATIONS')].append(user)
-            self.newLog(index, 'Resereved by user '+user+'.')
+            self.newLog(index, 'Resereved by user '+str(user)+'.')
             
         # Remove a given user from list of reservations for given book.
         def removeReservation(self, bookID, userID):
@@ -122,7 +122,7 @@ class Library:
             for j in rR_removals:
                 self.LibDF['RESERVATIONS'][bookID].pop(j)
                 rR_removals -=1
-            self.newLog(bookID,  'User '+userID+' cancelled their reservation' )
+            self.newLog(bookID,  'User '+str(userID)+' cancelled their reservation' )
 
         # Check if a given user is in the list of reservations for a given book.
         def isReservedBy(self,bookID,userID):
@@ -155,10 +155,10 @@ check = Library()
 #check.WriteToExcel('trysavingfilesforfun.xlsx')
 print(check.search('1899'))
 
-#check.newReserve(0,156)
+check.newReserve(0,156)
 #check.newReserve(0,12)
 #check.newReserve(0,9000)
-#check.removeReservation(0,156)
+check.removeReservation(0,156)
 #check.removeReservation(0,9000)
 #check.removeReservation(0,12)
 print(check.LibDF.head())
@@ -166,6 +166,6 @@ print(check.getIndex(1899))
 print(check.isReservedBy(0,156))
 #print(len(booksDF))
 #print(usersDF)
-print(type(check.getBook(0)))
-print(check.getBook(80))
-print(check.getBook(22))
+#print(type(check.getBook(0)))
+#print(check.getBook(80))
+#print(check.getBook(22))
