@@ -4,7 +4,9 @@ import numpy as np
 
 
 
-
+### Class for storage of data for Books in Library.
+### contains build-in functions for searching the library as well as adding and removing reservations and logging
+### events. 
 class Library:
     #################    
     ### SINGLETON ###
@@ -32,7 +34,7 @@ class Library:
             sNresults = []
             for i in range(len(self.LibDF)):
                 #print(self.LibDF.iloc[i])
-                if _input in self.LibDF.iloc[i].TITLE: # == _input:
+                if _input in self.LibDF.iloc[i].TITLE or  _input in self.LibDF.iloc[i].TITLE.lower(): # == _input:
                     sNresults.append(self.LibDF.iloc[i])
             return(sNresults)
 
@@ -41,7 +43,7 @@ class Library:
             sAresults = []
             for i in range(len(self.LibDF)):
                 #print(self.LibDF.iloc[i])
-                if _input in self.LibDF.iloc[i].AUTH: #== _input:
+                if _input in self.LibDF.iloc[i].AUTH or  _input in self.LibDF.iloc[i].AUTH.lower(): #== _input:
                     sAresults.append(self.LibDF.iloc[i])
             return(sAresults)
 
@@ -122,8 +124,8 @@ class Library:
 
 check = Library()
 #print(check.LibDF.head())
-check.WriteToExcel('trysavingfilesforfun.xlsx')
-print(check.search('Year','197'))
+#check.WriteToExcel('trysavingfilesforfun.xlsx')
+print(check.search('Title','heart'))
 
 #check.newReserve(0,156)
 #check.newReserve(0,12)
