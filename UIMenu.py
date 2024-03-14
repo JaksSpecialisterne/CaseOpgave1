@@ -260,7 +260,6 @@ def LogInMenu():
 
 def LogOut():
     userManagement.LogOutUser()
-    StartMenu()
 
 def StartMenu():
     while True:
