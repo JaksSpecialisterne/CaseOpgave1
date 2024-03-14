@@ -107,7 +107,17 @@ class UserManagement:
         def UserIdExists(self, userId):
             return userId < len(self.users)
         
+        def saveUser(self):
+            self.users.loc[self.currentUser.userId,'BORROWEDBOOKS'] = self.currentUser.borrowedBooks
+            self.users.loc[self.currentUser.userId,'RESERVATIONS'] = self.currentUser.reservations
+            self.users.loc[self.currentUser.userId,'LOG'] = self.currentUser.log
+            self.users.loc[self.currentUser.userId,'INBOX'] = self.currentUser.inbox
+             
+        
         def WriteToExcel(self, _filename):
+            self.saveUser()
             self.users.to_excel(_filename,index=False)
+            
+        
         
         
