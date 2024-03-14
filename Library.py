@@ -1,7 +1,8 @@
 import pandas as pd
 import ReadFile
 import numpy as np
-
+import openpyxl
+import string
 
 
 ### Class for storage of data for Books in Library.
@@ -133,8 +134,22 @@ class Library:
         
         # Writes the pandas DataFrame associated with this class object to an excel file, remember to include filetype
         # (.xlsx) in the filename passed to this function.
-        def WriteToExcel(self, _filename):
-            self.LibDF.to_excel(_filename,index=False)
+        def WriteToExcel(self, _filename, _index):
+            alphabet = list(string.ascii_lowercase)
+            workbook = openpyxl.load_workbook(_filename)
+            for i in range(len(self.LibDF.iloc[_index].values)):
+                WTE_string = alphabet[i].upper() + str(_index+2)
+                if self.LibDF.iloc[_index].values[i] == True:
+                    workbook.active[WTE_string] = True
+                elif self.LibDF.iloc[_index].values[i] ==False:
+                    workbook.active[WTE_string] = False
+                else:
+                    try:
+                        workbook.active[WTE_string] = self.LibDF.iloc[_index].values[i]
+                    except:
+                        workbook.active[WTE_string] = str(self.LibDF.iloc[_index].values[i])
+            workbook.save(_filename)
+
 
 
         
@@ -155,12 +170,21 @@ check = Library()
 #check.WriteToExcel('trysavingfilesforfun.xlsx')
 print(check.search('animal'))
 
-check.newReserve(0,156)
-#check.newReserve(0,12)
-#check.newReserve(0,9000)
-check.removeReservation(0,156)
-#check.removeReservation(0,9000)
-#check.removeReservation(0,12)
+check.newReserve(1,156)
+check.newReserve(0,12)
+check.newReserve(0,9000)
+
+testingWriteExcel = pd.DataFrame()
+testingWriteExcel.to_excel('checkExcelFunction3.xlsx')
+
+
+check.WriteToExcel('checkExcelFunction3.xlsx',2)
+check.WriteToExcel('checkExcelFunction3.xlsx',3)
+check.WriteToExcel('libraryBooks.xlsx',0)
+check.WriteToExcel('libraryBooks.xlsx',1)
+check.removeReservation(1,156)
+check.removeReservation(0,9000)
+check.removeReservation(0,12)
 print(check.LibDF.head())
 print(check.getIndex(1899))
 print(check.isReservedBy(0,156))

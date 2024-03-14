@@ -2,6 +2,8 @@ import pandas as pd
 from User import User
 from datetime import datetime
 import ast
+import openpyxl
+import string
 
 class UserManagement:
     __instance  = None
@@ -114,9 +116,21 @@ class UserManagement:
             self.users.loc[self.currentUser.userId,'INBOX'] = self.currentUser.inbox
              
         
-        def WriteToExcel(self, _filename):
-            self.saveUser()
-            self.users.to_excel(_filename,index=False)
+        def WriteToExcel(self, _filename, _index):
+            alphabet = list(string.ascii_lowercase)
+            workbook = openpyxl.load_workbook(_filename)
+            for i in range(len(self.users.iloc[_index].values)):
+                WTE_string = alphabet[i].upper() + str(_index+2)
+                if self.users.iloc[_index].values[i] == True:
+                    workbook.active[WTE_string] = True
+                elif self.users.iloc[_index].values[i] ==False:
+                    workbook.active[WTE_string] = False
+                else:
+                    try:
+                        workbook.active[WTE_string] = self.users.iloc[_index].values[i]
+                    except:
+                        workbook.active[WTE_string] = str(self.users.iloc[_index].values[i])
+            workbook.save(_filename)
             
         
         
