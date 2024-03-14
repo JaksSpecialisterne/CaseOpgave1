@@ -259,7 +259,7 @@ def LogInMenu():
     return
 
 def LogOut():
-    userManagement.WriteToExcel(userManagement.filename)
+    userManagement.WriteToExcel(userManagement.filename, userManagement.currentUser.userId)
     userManagement.LogOutUser()
 
 def StartMenu():
