@@ -85,8 +85,8 @@ def ShowMailbox():
     if not userManagement.currentUser.HasMail():
         print("\nNo mail...")
     else:
-        for log in userManagement.currentUser.inbox:
-            print(f"{log}")
+        for mail in userManagement.currentUser.inbox:
+            print(f"{mail}")
     KeyToContinue()
 
 
@@ -246,17 +246,17 @@ def LogInMenu():
     userAmount = 10 #sæt den til at være størrelsen af usert database - 1
     while True:
         num = input("Please enter your userId ")
+        print(num)
         try:
             val = int(num)
             if val <= userAmount and val >= 0:
-                #Sæt curren user i management her
                 userManagement.LogInUser(val)
                 break
             else:
                 print("Not a valid userId...")
         except ValueError:
             print("Not a userId, must be a integer...")
-    ShowMenu()
+    return
 
 def LogOut():
     userManagement.WriteToExcel(userManagement.filename)
@@ -264,17 +264,19 @@ def LogOut():
 
 def StartMenu():
     while True:
+        KeyToContinue()
         print("1: Log into user")
         print("2: Log into system library")
-        print("3: Save and close")
+        print("3: Close system")
         input = NumberInput(1, 3)
         match input:
             case 1:
                 LogInMenu()
+                ShowMenu()
             case 2:
                 SystemLogIn()
             case 3:
-                quit()
+                break
 
 def Initialize():
     global userManagement
