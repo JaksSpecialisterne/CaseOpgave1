@@ -186,27 +186,32 @@ def BorrowBook(book):
     bookId = book.name
     userManagement.UserBorrowBook(bookId)
     library.changeAvailability(bookId, userManagement.currentUser.userId)
+    SaveBookToFile(bookId)
     print(f"You have borrowed {book.TITLE}")
 
 def ReturnBook(book):
     bookId = book.name
     userManagement.UserReturnBook(bookId)
     library.changeAvailability(bookId, userManagement.currentUser.userId)
+    SaveBookToFile(bookId)
     print(f"You have returned {book.TITLE}")
 
 def ReserveBook(book):
     bookId = book.name
     userManagement.UserReserveBook(bookId)
     library.newReserve(bookId, userManagement.currentUser.userId)
+    SaveBookToFile(bookId)
     print(f"You have reserved {book.TITLE}")
 
 def UnreserveBook(book):
     bookId = book.name
     userManagement.UserUnreserveBook(bookId)
     library.removeReservation(bookId, userManagement.currentUser.userId)
+    SaveBookToFile(bookId)
     print(f"You have unreserved {book.TITLE}")
 
-
+def SaveBookToFile(bookId):
+    library.WriteToExcel(library.filename, bookId)
 
 def NotifyReserver():
     pass
