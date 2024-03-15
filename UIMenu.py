@@ -215,7 +215,8 @@ def UnreserveBook(book):
 def SaveBookToFile(bookId):
     library.WriteToExcel(library.filename, bookId)
 
-def NotifyReserver():
+def NotifyReserver(bookId):
+    #userManagement.NotifyUsers()
     pass
 
 def LogEvent(event):
