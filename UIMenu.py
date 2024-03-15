@@ -48,6 +48,7 @@ def ShowMenuSystem():
 
 
 def AddBookToLibrary():
+    KeyToContinue()
     pass
 
 
