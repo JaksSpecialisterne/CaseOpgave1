@@ -29,7 +29,7 @@ class Library:
     class __impl:
         def __init__(self):
             pass
-        
+        filename = 'libraryBooks.xlsx'
         # Uses Readfile.py to load data from excel file
         LibDF = ReadFile.ReadFile().data
         
