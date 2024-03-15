@@ -120,19 +120,12 @@ class UserManagement:
         def WriteToExcel(self, _filename, _index):
             alphabet = list(string.ascii_lowercase)
             workbook = openpyxl.load_workbook(_filename)
-            for i in range(len(self.users.iloc[_index].values)):
+            for i in range(len(self.currentUser.__dict__)-1):
                 WTE_string = alphabet[i].upper() + str(_index+2)
-                if self.users.iloc[_index].values[i] == True:
-                    workbook.active[WTE_string] = True
-                elif self.users.iloc[_index].values[i] ==False:
-                    workbook.active[WTE_string] = False
-                else:
-                    try:
-                        workbook.active[WTE_string] = self.users.iloc[_index].values[i]
-                    except:
-                        workbook.active[WTE_string] = str(self.users.iloc[_index].values[i])
+                try:
+                    workbook.active[WTE_string] = list(self.currentUser.__dict__.values())[i+1]
+                except:
+                    workbook.active[WTE_string] = str(list(self.currentUser.__dict__.values())[i+1])
             workbook.save(_filename)
             
-        
-        
         
