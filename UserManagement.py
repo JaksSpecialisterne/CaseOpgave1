@@ -86,6 +86,7 @@ class UserManagement:
 
 
 
+        #Get current time stamp
         def GetTimeStamp(self):
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
@@ -101,6 +102,7 @@ class UserManagement:
             self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, ast.literal_eval(tempUser.BORROWEDBOOKS), ast.literal_eval(tempUser.RESERVATIONS), ast.literal_eval(tempUser.LOG), ast.literal_eval(tempUser.INBOX))
             self.LogEvent("Log in at " + self.GetTimeStamp())
 
+        #Logs the user out, saving their what they've done so far
         def LogOutUser(self):
             #Gem brugere her og skriv den til dataen.
             self.LogEvent("Log out at " + self.GetTimeStamp())
@@ -131,6 +133,7 @@ class UserManagement:
                     workbook.active[WTE_string] = str(list(self.currentUser.__dict__.values())[i+1])
             workbook.save(_filename)
 
+        #Reads from the excel file and changes the list of possible users to that
         def ReadExcelFile(self):
             self.users = pd.read_excel(self.filename)
             
