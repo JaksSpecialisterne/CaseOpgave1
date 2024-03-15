@@ -10,27 +10,27 @@ def ShowMenu():
     while True:
         print(f"\nWelcome {userManagement.currentUser.name}")
         print("\nSelect one:\n")
-        print("1: Log out")
-        print("2: Search for book")
-        print("3: See reservations")
-        print("4: See borrowed books")
-        print("5: See log")
-        print("6: See mailbox")
+        print("1: Search for book")
+        print("2: See reservations")
+        print("3: See borrowed books")
+        print("4: See log")
+        print("5: See mailbox")
+        print("6: Log out")
         input = NumberInput(1, 6)
         match input:
             case 1:
+                ShowSearchMenu()
+            case 2:
+                ShowReservations()
+            case 3:
+                ShowBorrowedBooks()
+            case 4:
+                ShowLogs()
+            case 5:
+                ShowMailbox()
+            case 6:
                 LogOut()
                 break
-            case 2:
-                ShowSearchMenu()
-            case 3:
-                ShowReservations()
-            case 4:
-                ShowBorrowedBooks()
-            case 5:
-                ShowLogs()
-            case 6:
-                ShowMailbox()
 
 def ShowMenuSystem():
     while True:
@@ -44,8 +44,12 @@ def ShowMenuSystem():
             case 2:
                 AddBookToLibrary()
 
+
+
+
 def AddBookToLibrary():
     pass
+
 
 
 def ShowBorrowedBooks():
@@ -243,13 +247,13 @@ def SystemLogIn():
 
 def LogInMenu():
     os.system('cls')
-    userAmount = 10 #sæt den til at være størrelsen af usert database - 1
+    userAmount = len(userManagement.users)
     while True:
         num = input("Please enter your userId ")
         print(num)
         try:
             val = int(num)
-            if val <= userAmount and val >= 0:
+            if val < userAmount and val >= 0:
                 userManagement.LogInUser(val)
                 break
             else:
@@ -259,7 +263,6 @@ def LogInMenu():
     return
 
 def LogOut():
-    userManagement.WriteToExcel(userManagement.filename, userManagement.currentUser.userId)
     userManagement.LogOutUser()
 
 def StartMenu():

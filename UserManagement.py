@@ -103,6 +103,7 @@ class UserManagement:
         def LogOutUser(self):
             #Gem brugere her og skriv den til dataen.
             self.LogEvent("Log out at " + self.GetTimeStamp())
+            self.WriteToExcel(self.filename, self.currentUser.userId)
             self.currentUser = None
 
         #Check if id exists return.
