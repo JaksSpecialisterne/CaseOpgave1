@@ -21,7 +21,6 @@ class UserManagement:
     #Actual code goes in this inner class
     class __impl:
         def __init__(self):
-            
             self.filename = 'user_data.xlsx'
             self.users = pd.read_excel(self.filename)
             self.currentUser = None
@@ -96,13 +95,13 @@ class UserManagement:
         #Initialize user from database using userId
         def LogInUser(self, userId):
             tempUser = self.users.iloc[userId]
-            #self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, tempUser.BORROWEDBOOKS, tempUser.LOG, tempUser.INBOX)
-            self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, ast.literal_eval(tempUser.BORROWEDBOOKS),ast.literal_eval(tempUser.RESERVATIONS), ast.literal_eval(tempUser.LOG) ,ast.literal_eval(tempUser.INBOX))
+            self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, ast.literal_eval(tempUser.BORROWEDBOOKS), ast.literal_eval(tempUser.RESERVATIONS), ast.literal_eval(tempUser.LOG), ast.literal_eval(tempUser.INBOX))
             self.LogEvent("Log in at " + self.GetTimeStamp())
 
         def LogOutUser(self):
             #Gem brugere her og skriv den til dataen.
             self.LogEvent("Log out at " + self.GetTimeStamp())
+            #self.saveUser()
             self.WriteToExcel(self.filename, self.currentUser.userId)
             self.currentUser = None
 
@@ -110,13 +109,14 @@ class UserManagement:
         def UserIdExists(self, userId):
             return userId < len(self.users)
         
+        #Supposedly saves user to dataframe, but doesnt works
         def saveUser(self):
             self.users.loc[self.currentUser.userId,'BORROWEDBOOKS'] = self.currentUser.borrowedBooks
             self.users.loc[self.currentUser.userId,'RESERVATIONS'] = self.currentUser.reservations
             self.users.loc[self.currentUser.userId,'LOG'] = self.currentUser.log
             self.users.loc[self.currentUser.userId,'INBOX'] = self.currentUser.inbox
              
-        
+        #Saves to excelfile
         def WriteToExcel(self, _filename, _index):
             alphabet = list(string.ascii_lowercase)
             workbook = openpyxl.load_workbook(_filename)
@@ -127,5 +127,8 @@ class UserManagement:
                 except:
                     workbook.active[WTE_string] = str(list(self.currentUser.__dict__.values())[i+1])
             workbook.save(_filename)
+
+        def ReadExcelFile(self):
+            self.users = pd.read_excel(self.filename)
             
         

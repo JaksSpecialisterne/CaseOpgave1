@@ -210,6 +210,8 @@ def UnreserveBook(book):
     SaveBookToFile(bookId)
     print(f"You have unreserved {book.TITLE}")
 
+
+
 def SaveBookToFile(bookId):
     library.WriteToExcel(library.filename, bookId)
 
@@ -218,6 +220,8 @@ def NotifyReserver():
 
 def LogEvent(event):
     userManagement.LogEvent(event)
+
+
 
 def NumberInput(minNum, maxNum):
     while True:
@@ -252,19 +256,20 @@ def SystemLogIn():
 
 def LogInMenu():
     os.system('cls')
+    userManagement.ReadExcelFile()
     userAmount = len(userManagement.users)
     while True:
-        num = input("Please enter your userId ")
-        print(num)
+        print("\nPlease enter your userId")
+        num = input()
         try:
             val = int(num)
-            if val < userAmount and val >= 0:
+            if val >= 0 and val < userAmount:
                 userManagement.LogInUser(val)
                 break
             else:
-                print("Not a valid userId...")
+                print("\nNot a valid userId...")
         except ValueError:
-            print("Not a userId, must be a integer...")
+            print("\nMust be a number...")
     return
 
 def LogOut():
@@ -272,7 +277,7 @@ def LogOut():
 
 def StartMenu():
     while True:
-        KeyToContinue()
+        os.system('cls')
         print("1: Log into user")
         print("2: Log into system library")
         print("3: Close system")
@@ -280,6 +285,7 @@ def StartMenu():
         match input:
             case 1:
                 LogInMenu()
+                KeyToContinue()
                 ShowMenu()
             case 2:
                 SystemLogIn()

@@ -1,12 +1,13 @@
 class User:
-    def __init__(self, userId, name, address, borrowedBooks = [], reservations = [], inbox = [], log = []):
+    def __init__(self, userId, name, address, borrowedBooks = [], reservations = [], log = [], inbox = []):
         self.userId = userId
         self.name = name
         self.address = address
         self.borrowedBooks = borrowedBooks
         self.reservations = reservations
-        self.inbox = inbox
         self.log = log
+        self.inbox = inbox
+        
 
     #Adds the given log to the books logs
     def LogEvent(self, log):
