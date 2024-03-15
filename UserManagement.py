@@ -110,6 +110,8 @@ class UserManagement:
             self.WriteToExcel(self.filename, self.currentUser.userId)
             self.currentUser = None
 
+
+
         #Check if id exists return.
         def UserIdExists(self, userId):
             return userId < len(self.users)

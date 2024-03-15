@@ -79,6 +79,7 @@ def ShowReservations():
 
 #Shows the user the search menu
 def ShowSearchMenu():
+    os.system('cls')
     print("\nHow would you like to search for your book?")
     print("1: By author\n2: by year\n3: by title\n4: By author, year or title\n5:return to menu")
     input = NumberInput(1, 5)
@@ -116,6 +117,7 @@ def SearchMenu(searchType):
 
     difParam = False
     while True:
+        os.system('cls')
         searchTerm = input("\nPlease enter searchterm: ")
         if searchTerm == "retry0":
             difParam = True
@@ -140,6 +142,7 @@ def SearchMenu(searchType):
 
 #Here you select the book you want to view more info on
 def SelectBook(books):
+    os.system('cls')
     i = 1
     for book in books:
         print(f"{i}: {book.TITLE}, {book.AUTH}, {book.YEAR}")
@@ -156,7 +159,8 @@ def BookAction(book, books):
     canBorrow = CanBorrowBook(book)
     canReturn = userManagement.UserHasBook(book.name)
     funcToDo = []
-
+    
+    os.system('cls')
     print(f"\nWhat would you like to do with {book.TITLE}")
 
     if  canReserve:
