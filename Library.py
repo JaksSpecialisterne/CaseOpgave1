@@ -3,6 +3,7 @@ import ReadFile
 import numpy as np
 import openpyxl
 import string
+import ast
 
 
 ### Class for storage of data for Books in Library.
@@ -31,6 +32,12 @@ class Library:
             pass
         filename = 'libraryBooks.xlsx'
         # Uses Readfile.py to load data from excel file
+        #LibDF = pd.read_excel(filename)
+        #for i in range(len(LibDF)):
+        #    #LibDF.loc[i,'AVAILABLE'] = ast.literal_eval(LibDF.loc[i,'AVAILABLE'])
+        #    print(LibDF.loc[i,'RESERVATIONS'] ,'and',  [ast.literal_eval(LibDF.loc[i,'RESERVATIONS'])])
+        #    LibDF.loc[i,'RESERVATIONS'] = ast.literal_eval(LibDF.loc[i,'RESERVATIONS'])
+        #    LibDF.loc[i,'LOG'] = ast.literal_eval(LibDF.loc[i,'LOG'])
         LibDF = ReadFile.ReadFile().data
         
         
@@ -164,32 +171,3 @@ class Library:
 ######################################################################
 ################# TESTING ############################################
 ######################################################################
-
-check = Library()
-#print(check.LibDF.head())
-#check.WriteToExcel('trysavingfilesforfun.xlsx')
-print(check.search('animal'))
-
-check.newReserve(1,156)
-check.newReserve(0,12)
-check.newReserve(0,9000)
-
-testingWriteExcel = pd.DataFrame()
-testingWriteExcel.to_excel('checkExcelFunction3.xlsx')
-
-
-check.WriteToExcel('checkExcelFunction3.xlsx',2)
-check.WriteToExcel('checkExcelFunction3.xlsx',3)
-check.WriteToExcel('libraryBooks.xlsx',0)
-check.WriteToExcel('libraryBooks.xlsx',1)
-check.removeReservation(1,156)
-check.removeReservation(0,9000)
-check.removeReservation(0,12)
-print(check.LibDF.head())
-print(check.getIndex(1899))
-print(check.isReservedBy(0,156))
-#print(len(booksDF))
-#print(usersDF)
-#print(type(check.getBook(0)))
-#print(check.getBook(80))
-#print(check.getBook(22))

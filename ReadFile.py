@@ -36,4 +36,3 @@ class ReadFile:
         
         
 df = ReadFile().data
-print(df.head())
