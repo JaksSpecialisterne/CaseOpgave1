@@ -30,9 +30,12 @@ class UserManagement:
             self.users.loc[len(self.users)] = [name, address, [], [], []]
 
         #Notify user who has reservation for given book by id
-        def NotifyUsers(self, userId, mail):
-            self.users.iloc[userId].INBOX.append(mail)
-
+        def NotifyUsers(self, book):
+            #userId = 0
+            #Find user id from book using bookId and notify all user (in simple loop) from list of reservations in given book.
+            #mail = "mail mail"
+            #self.users.iloc[userId].INBOX.append(mail)
+            pass
 
 
         #Borrow book for user

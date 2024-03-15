@@ -195,6 +195,7 @@ def ReturnBook(book):
     library.changeAvailability(bookId, userManagement.currentUser.userId)
     SaveBookToFile(bookId)
     print(f"You have returned {book.TITLE}")
+    NotifyReservers()
 
 def ReserveBook(book):
     bookId = book.name
@@ -215,8 +216,8 @@ def UnreserveBook(book):
 def SaveBookToFile(bookId):
     library.WriteToExcel(library.filename, bookId)
 
-def NotifyReserver(bookId):
-    #userManagement.NotifyUsers()
+def NotifyReservers(book):
+    #userManagement.NotifyUsers(book)
     pass
 
 def LogEvent(event):
