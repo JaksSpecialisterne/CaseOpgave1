@@ -61,8 +61,8 @@ class UserManagement:
 
 
         #Check if user has book
-        def UserHasBook(self, book):
-            return self.currentUser.HasBook(book.name)
+        def UserHasBook(self, bookId):
+            return self.currentUser.HasBook(bookId)
 
         #Return list of books borrowed by the user
         def BorrowedBooksByUser(self):

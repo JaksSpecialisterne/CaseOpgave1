@@ -154,7 +154,7 @@ def SelectBook(books):
 def BookAction(book, books):
     canReserve = not userManagement.BookAlreadyReservedByUser(book.name)
     canBorrow = CanBorrowBook(book)
-    canReturn = userManagement.UserHasBook(book)
+    canReturn = userManagement.UserHasBook(book.name)
     funcToDo = []
 
     print(f"\nWhat would you like to do with {book.TITLE}")
