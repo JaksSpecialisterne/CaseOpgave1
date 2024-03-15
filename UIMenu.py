@@ -10,7 +10,7 @@ superSecretPassword = "password"
 def ShowMenu():
     while True:
         os.system('cls')
-        print(f"\nWelcome {userManagement.currentUser.name}")
+        print(f"Welcome {userManagement.currentUser.name}")
         print("\nSelect one:\n")
         print("1: Search for book")
         print("2: See reservations")
@@ -37,6 +37,7 @@ def ShowMenu():
 #Shows main menu for admins
 def ShowMenuSystem():
     while True:
+        print("Welcome admin")
         print("\nSelect one:\n")
         print("1: Log out")
         print("2: Add new book to library")
@@ -58,9 +59,9 @@ def AddBookToLibrary():
 #Show the user their borrowed books
 def ShowBorrowedBooks():
     if userManagement.NoBorrowedByUser():
-        print("\nNo borrowed books...")
+        print("No borrowed books...")
     else:
-        print("\nCurrent borrowed books: ")
+        print("Current borrowed books: \n")
         for book in userManagement.BorrowedBooksByUser():
             bookObject = library.getBook(book)
             print(f"{bookObject.TITLE} by {bookObject.AUTH}")
@@ -69,9 +70,9 @@ def ShowBorrowedBooks():
 #Shows the user their reserve books
 def ShowReservations():
     if userManagement.NoReservationsByUser():
-        print("\nNo reservations...")
+        print("No reservations...")
     else:
-        print("\nCurrent resevations: ")
+        print("Current resevations: \n")
         for book in userManagement.ReservedBooksByUser():
             bookObject = library.getBook(book)
             print(f"{bookObject.TITLE} by {bookObject.AUTH}")
@@ -80,15 +81,15 @@ def ShowReservations():
 #Shows the user the search menu
 def ShowSearchMenu():
     os.system('cls')
-    print("\nHow would you like to search for your book?")
-    print("1: By author\n2: by year\n3: by title\n4: By author, year or title\n5:return to menu")
+    print("How would you like to search for your book?")
+    print("\n1: By author\n2: by year\n3: by title\n4: By all\n5: Return to menu")
     input = NumberInput(1, 5)
     if input < 5:
         SearchMenu(input)
 
 #Shows the user their logs
 def ShowLogs():
-    print("\nLogs:")
+    print("Logs:")
     for log in userManagement.currentUser.log:
         print(f"{log}")
     KeyToContinue()
@@ -96,10 +97,10 @@ def ShowLogs():
 #Show the user their mailbox
 def ShowMailbox():
     if not userManagement.currentUser.HasMail():
-        print("\nNo mail...")
+        print("No mail...")
     else:
         for mail in userManagement.currentUser.inbox:
-            print(f"{mail}")
+            print(f"{mail}\n")
     KeyToContinue()
 
 
@@ -118,6 +119,7 @@ def SearchMenu(searchType):
     difParam = False
     while True:
         os.system('cls')
+        print(f"Search by {method}")
         searchTerm = input("\nPlease enter searchterm: ")
         if searchTerm == "retry0":
             difParam = True
@@ -138,7 +140,7 @@ def SearchMenu(searchType):
         return
     
     SelectBook(books)
-    KeyToContinue()
+    #KeyToContinue()
 
 #Here you select the book you want to view more info on
 def SelectBook(books):
@@ -147,7 +149,7 @@ def SelectBook(books):
     for book in books:
         print(f"{i}: {book.TITLE}, {book.AUTH}, {book.YEAR}")
         i += 1
-    print("\nWhat book you wish to view more info on, reserve, unreserve, book or return\nEnter 0 to return to menu")
+    print("\nWhat book you wish to view more info on, reserve, unreserve, book or return?\nEnter 0 to return to menu")
     input = NumberInput(0, i)-1
     if input == -1:
         return
@@ -159,9 +161,9 @@ def BookAction(book, books):
     canBorrow = CanBorrowBook(book)
     canReturn = userManagement.UserHasBook(book.name)
     funcToDo = []
-    
+
     os.system('cls')
-    print(f"\nWhat would you like to do with {book.TITLE}")
+    print(f"What would you like to do with {book.TITLE}")
 
     if  canReserve:
         print("1: reserve book")
@@ -183,6 +185,7 @@ def BookAction(book, books):
     if input == 2:
         SelectBook(books)
     else:
+        print()
         funcToDo[input](book)
     
 
@@ -267,7 +270,8 @@ def KeyToContinue():
 def SystemLogIn():
     SystemLogOn = False
     while True:
-        passw = input("\nPlease enter the system password or return0 to return to login screen ")
+        os.system("cls")
+        passw = input("Please enter the system password or return0 to return to login screen ")
         global superSecretPassword
         if passw == superSecretPassword:
             SystemLogOn = True
@@ -284,7 +288,7 @@ def LogInMenu():
     userManagement.ReadExcelFile()
     userAmount = len(userManagement.users)
     while True:
-        print("\nPlease enter your userId")
+        print("Please enter your userId")
         num = input()
         try:
             val = int(num)
@@ -312,7 +316,6 @@ def StartMenu():
         match input:
             case 1:
                 LogInMenu()
-                KeyToContinue()
                 ShowMenu()
             case 2:
                 SystemLogIn()
