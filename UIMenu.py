@@ -6,8 +6,10 @@ userManagement = None
 library = None
 superSecretPassword = "password"
 
+#Shows main menu for users
 def ShowMenu():
     while True:
+        os.system('cls')
         print(f"\nWelcome {userManagement.currentUser.name}")
         print("\nSelect one:\n")
         print("1: Search for book")
@@ -32,6 +34,7 @@ def ShowMenu():
                 LogOut()
                 break
 
+#Shows main menu for admins
 def ShowMenuSystem():
     while True:
         print("\nSelect one:\n")
@@ -46,12 +49,13 @@ def ShowMenuSystem():
 
 
 
-
+#Adds new book to library (Not implemented)
 def AddBookToLibrary():
+    KeyToContinue()
     pass
 
 
-
+#Show the user their borrowed books
 def ShowBorrowedBooks():
     if userManagement.NoBorrowedByUser():
         print("\nNo borrowed books...")
@@ -62,6 +66,7 @@ def ShowBorrowedBooks():
             print(f"{bookObject.TITLE} by {bookObject.AUTH}")
     KeyToContinue()
 
+#Shows the user their reserve books
 def ShowReservations():
     if userManagement.NoReservationsByUser():
         print("\nNo reservations...")
@@ -72,6 +77,7 @@ def ShowReservations():
             print(f"{bookObject.TITLE} by {bookObject.AUTH}")
     KeyToContinue()
 
+#Shows the user the search menu
 def ShowSearchMenu():
     print("\nHow would you like to search for your book?")
     print("1: By author\n2: by year\n3: by title\n4: By author, year or title\n5:return to menu")
@@ -79,12 +85,14 @@ def ShowSearchMenu():
     if input < 5:
         SearchMenu(input)
 
+#Shows the user their logs
 def ShowLogs():
     print("\nLogs:")
     for log in userManagement.currentUser.log:
         print(f"{log}")
     KeyToContinue()
 
+#Show the user their mailbox
 def ShowMailbox():
     if not userManagement.currentUser.HasMail():
         print("\nNo mail...")
@@ -94,7 +102,7 @@ def ShowMailbox():
     KeyToContinue()
 
 
-
+#Searchh menu where you specify how and what you want to search for
 def SearchMenu(searchType):
     match searchType:
         case 1:
@@ -130,6 +138,7 @@ def SearchMenu(searchType):
     SelectBook(books)
     KeyToContinue()
 
+#Here you select the book you want to view more info on
 def SelectBook(books):
     i = 1
     for book in books:
@@ -141,6 +150,7 @@ def SelectBook(books):
         return
     BookAction(books[input], books)
 
+#Here you specify what action you want to do with said book
 def BookAction(book, books):
     canReserve = not userManagement.BookAlreadyReservedByUser(book.name)
     canBorrow = CanBorrowBook(book)
@@ -172,7 +182,7 @@ def BookAction(book, books):
         funcToDo[input](book)
     
 
-
+#Check if user can borrow given book
 def CanBorrowBook(book):
     if len(book.RESERVATIONS) > 0:
         if book.RESERVATIONS[0] == userManagement.currentUser.userId:
@@ -182,6 +192,7 @@ def CanBorrowBook(book):
     else:
         return book.AVAILABLE
 
+#Borrows book for user
 def BorrowBook(book):
     bookId = book.name
     userManagement.UserBorrowBook(bookId)
@@ -189,13 +200,16 @@ def BorrowBook(book):
     SaveBookToFile(bookId)
     print(f"You have borrowed {book.TITLE}")
 
+#Returns book for user
 def ReturnBook(book):
     bookId = book.name
     userManagement.UserReturnBook(bookId)
     library.changeAvailability(bookId, userManagement.currentUser.userId)
     SaveBookToFile(bookId)
     print(f"You have returned {book.TITLE}")
+    NotifyReservers()
 
+#Reserves book for user
 def ReserveBook(book):
     bookId = book.name
     userManagement.UserReserveBook(bookId)
@@ -203,6 +217,7 @@ def ReserveBook(book):
     SaveBookToFile(bookId)
     print(f"You have reserved {book.TITLE}")
 
+#Unreseve book for user
 def UnreserveBook(book):
     bookId = book.name
     userManagement.UserUnreserveBook(bookId)
@@ -211,18 +226,21 @@ def UnreserveBook(book):
     print(f"You have unreserved {book.TITLE}")
 
 
-
+#Saves book to library file after change
 def SaveBookToFile(bookId):
     library.WriteToExcel(library.filename, bookId)
 
-def NotifyReserver():
+#Notfies user when book is return and it has reservations
+def NotifyReservers(book):
+    #userManagement.NotifyUsers(book)
     pass
 
+#Logs event
 def LogEvent(event):
     userManagement.LogEvent(event)
 
 
-
+#Make sure the a given input between the given numbers are correct
 def NumberInput(minNum, maxNum):
     while True:
         num = input("\nPlease enter a number ")
@@ -235,11 +253,13 @@ def NumberInput(minNum, maxNum):
         except ValueError:
             print("Not a number...")
 
+#Simple function that waits for user to give an input
 def KeyToContinue():
     print("\nPress a key to continue...")
     input()
     os.system('cls')
 
+#Log in screen for admins
 def SystemLogIn():
     SystemLogOn = False
     while True:
@@ -254,6 +274,7 @@ def SystemLogIn():
     if SystemLogOn:
         ShowMenuSystem()
 
+#Log in screen for users
 def LogInMenu():
     os.system('cls')
     userManagement.ReadExcelFile()
@@ -272,9 +293,11 @@ def LogInMenu():
             print("\nMust be a number...")
     return
 
+#Logs out the user
 def LogOut():
     userManagement.LogOutUser()
 
+#Start menu for program
 def StartMenu():
     while True:
         os.system('cls')
@@ -292,11 +315,14 @@ def StartMenu():
             case 3:
                 break
 
+#Initializes of library and usermanagement singletons
 def Initialize():
     global userManagement
     userManagement = UserManagement()
     global library
     library = Library()
+
+
 
 if __name__ == '__main__':
     Initialize()

@@ -34,7 +34,6 @@ class User:
     def ReturnBook(self, bookId):
         self.borrowedBooks.remove(bookId)
 
-
     #Reserve book by bookId
     def ReserveBook(self, bookId):
         self.reservations.append(bookId)
@@ -44,12 +43,15 @@ class User:
         self.reservations.remove(bookId)
 
 
+    #Check wether the user has the given book
     def HasBook(self, bookId):
         return bookId in self.borrowedBooks
     
+    #Checks if the user has no reservations
     def NoReservation(self):
         return not self.reservations
     
+    #Check if the user has no borrowed book
     def NoBorrowedBooks(self):
         return not self.borrowedBooks
 

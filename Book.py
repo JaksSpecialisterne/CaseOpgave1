@@ -1,3 +1,4 @@
+#DEPRECATED AF
 class Book:
     #Switches availability of book
     def ChangeAvailableStatus(df):

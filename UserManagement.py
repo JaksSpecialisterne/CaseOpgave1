@@ -30,9 +30,12 @@ class UserManagement:
             self.users.loc[len(self.users)] = [name, address, [], [], []]
 
         #Notify user who has reservation for given book by id
-        def NotifyUsers(self, userId, mail):
-            self.users.iloc[userId].INBOX.append(mail)
-
+        def NotifyUsers(self, book):
+            #userId = 0
+            #Find user id from book using bookId and notify all user (in simple loop) from list of reservations in given book.
+            #mail = "mail mail"
+            #self.users.iloc[userId].INBOX.append(mail)
+            pass
 
 
         #Borrow book for user
@@ -83,6 +86,7 @@ class UserManagement:
 
 
 
+        #Get current time stamp
         def GetTimeStamp(self):
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
@@ -98,6 +102,7 @@ class UserManagement:
             self.currentUser = User(userId, tempUser.NAME, tempUser.ADDRESS, ast.literal_eval(tempUser.BORROWEDBOOKS), ast.literal_eval(tempUser.RESERVATIONS), ast.literal_eval(tempUser.LOG), ast.literal_eval(tempUser.INBOX))
             self.LogEvent("Log in at " + self.GetTimeStamp())
 
+        #Logs the user out, saving their what they've done so far
         def LogOutUser(self):
             #Gem brugere her og skriv den til dataen.
             self.LogEvent("Log out at " + self.GetTimeStamp())
@@ -128,6 +133,7 @@ class UserManagement:
                     workbook.active[WTE_string] = str(list(self.currentUser.__dict__.values())[i+1])
             workbook.save(_filename)
 
+        #Reads from the excel file and changes the list of possible users to that
         def ReadExcelFile(self):
             self.users = pd.read_excel(self.filename)
             
